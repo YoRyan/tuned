@@ -111,7 +111,7 @@ class DiskPlugin(hotplug.Plugin):
 			return False
 		if device in self._hdparm_apm_device_support:
 			return self._hdparm_apm_device_support[device]
-		(rc, out, err_msg) = self._cmd.execute(["hdparm", "-C", "/dev/%s" % device], \
+		(rc, out, err_msg) = self._cmd.execute(["hdparm", "-B", "/dev/%s" % device], \
 				no_errors = [errno.ENOENT], return_err=True)
 		if rc == -errno.ENOENT:
 			log.warning("hdparm command not found, ignoring for other devices")
@@ -122,7 +122,7 @@ class DiskPlugin(hotplug.Plugin):
 			log.debug("(rc: %s, msg: '%s')" % (rc, err_msg))
 			self._hdparm_apm_device_support[device] = False
 			return False
-		elif "unknown" in out:
+		elif "not supported" in out:
 			log.info("Driver for device '%s' does not support apm command" % device)
 			self._hdparm_apm_device_support[device] = False
 			return False
